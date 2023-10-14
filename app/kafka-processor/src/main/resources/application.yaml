@@ -1,3 +1,6 @@
 
 kafka-properties:
-  bootstrap.servers: 10.43.18.80:9092
+  bootstrap.servers: kafka:9092
+
+hadoop:
+  host: namenode:8020
