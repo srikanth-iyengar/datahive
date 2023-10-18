@@ -1,0 +1,64 @@
+version: "2"
+services:
+   namenode:
+      image: apache/hadoop:3
+      hostname: namenode
+      command: ["hdfs", "namenode"]
+      ports:
+        - 9870:9870
+      env_file:
+        - ./config
+      environment:
+          ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+   datanode:
+      image: apache/hadoop:3
+      command: ["hdfs", "datanode"]
+      env_file:
+        - ./config      
+   resourcemanager:
+      image: apache/hadoop:3
+      hostname: resourcemanager
+      command: ["yarn", "resourcemanager"]
+      ports:
+         - 8088:8088
+      env_file:
+        - ./config
+      volumes:
+        - ./test.sh:/opt/test.sh
+   nodemanager:
+      image: apache/hadoop:3
+      command: ["yarn", "nodemanager"]
+      env_file:
+        - ./config
+   kafka:
+    image: 'bitnami/kafka:latest'
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+   kafka-monitor:
+     image: provectuslabs/kafka-ui
+     ports:
+       - 8080:8080
+     environment:
+       KAFKA_CLUSTERS_0_NAME: local
+       SPRING_CONFIG_ADDITIONAL-LOCATION: /kui.yaml
+       DYNAMIC_CONFIG_ENABLED: "true"
+     volumes:
+       - ./kui.yaml:/kui.yaml
+   dev-kafkaprocessor:
+     image: openjdk:17-jdk-bullseye
+     command: ["tail", "-f", "/dev/null"]
+     volumes:
+       - ../app/ingestion:/opt/datahive/ingestion
+       - ./ingestor.sh:/ingestor.sh
+   dev-ingestion-arbiter:
+     image: deadcoder11u2/ubuntu:fat
+     command: ["bash","/entrypoint.sh"]
+     volumes:
+       - ../generate.py:/generate.py
+       - ./entrypoint.sh:/entrypoint.sh
+  

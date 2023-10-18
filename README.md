@@ -20,7 +20,7 @@ kafka:
             hdfs-file-name: <hdfs-file-name>
         - elasticsearch:
             index-name: <elasticsearch-index>
-# your elasticsearch mapping json value
+            # your elasticsearch mapping json value
             mappings: |
             {
                 

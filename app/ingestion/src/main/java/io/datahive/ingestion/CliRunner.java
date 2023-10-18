@@ -1,15 +1,16 @@
-package io.datahive.kafkaprocessor;
+package io.datahive.ingestion;
 
-import io.datahive.kafkaprocessor.worker.DatahiveConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import io.datahive.ingestion.worker.DatahiveKafkaWorker;
 
 @Component
 public class CliRunner implements CommandLineRunner {
 
     @Autowired
-    private DatahiveConsumer datahiveConsumer;
+    private DatahiveKafkaWorker datahiveKafkaWorker;
 
     @Override
     public void run(String ...args) {
@@ -49,12 +50,13 @@ public class CliRunner implements CommandLineRunner {
                 "    return newJsonPayload;\n" +
                 "};\n" +
                 "this";
-        datahiveConsumer.startConsumerWithTransformations("power_grid_data.in", groovyScript, "power_grid_data.out");
+        datahiveKafkaWorker.startConsumerWithTransformations("power_grid_data.in", groovyScript, "power_grid_data.out");
         try {   
-            datahiveConsumer.startConsumerAndPushHadoop("power_grid_data.out", "/data/get.json");
+            datahiveKafkaWorker.startConsumerAndPushHadoop("power_grid_data.out", "/data/get1.json");
         }
         catch(Exception e) {
         }
     }
 
 }
+
