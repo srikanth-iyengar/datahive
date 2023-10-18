@@ -1,8 +1,0 @@
-server:
-  shutdown: graceful
-
-kafka-properties:
-  bootstrap.servers: kafka:9092
-
-hadoop:
-  host: namenode:8020
