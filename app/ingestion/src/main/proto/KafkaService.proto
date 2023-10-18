@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.datahive.ingestion.proto";
+option java_outer_classname = "KafkaService";
+
+message ConsumerRequestWithTransformation {
+    string inTopic = 1;
+    string outTopic = 2;
+    string groovyScript = 3;
+}
+
+message ConsumerRequestWithHadoop {
+    string inTopic = 1;
+    string hdfsFileName = 2;
+}
+
+message Response {
+    string status = 1;
+}
+
+service IngestionService {
+    rpc StartKafkaConsumerWithTransformation(ConsumerRequestWithTransformation) returns (Response);
+    rpc StartKafkaConsumerWithHDFSPlugin(ConsumerRequestWithHadoop) returns (Response);
+}

@@ -5,7 +5,6 @@ package io.datahive.ingestion.worker;
 import io.datahive.ingestion.utils.HadoopUtils;
 import io.datahive.ingestion.utils.WorkerUtils;
 
-import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Component
