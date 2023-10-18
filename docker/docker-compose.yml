@@ -50,10 +50,10 @@ services:
      volumes:
        - ./kui.yaml:/kui.yaml
    dev-kafkaprocessor:
-     image: deadcoder11u2/ubuntu:fat
-     command: ["bash", "/ingesetor.sh"]
+     image: openjdk:17-jdk-bullseye
+     command: ["tail", "-f", "/dev/null"]
      volumes:
-       - ../app/kafka-processor:/opt/datahive/kafka-processor
+       - ../app/ingestion:/opt/datahive/ingestion
        - ./ingestor.sh:/ingestor.sh
    dev-ingestion-arbiter:
      image: deadcoder11u2/ubuntu:fat

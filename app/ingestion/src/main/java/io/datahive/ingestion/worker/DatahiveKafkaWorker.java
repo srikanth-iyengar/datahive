@@ -1,7 +1,9 @@
-package io.datahive.kafkaprocessor.worker;
+package io.datahive.ingestion.worker;
 
-import io.datahive.kafkaprocessor.utils.HadoopUtils;
-import io.datahive.kafkaprocessor.utils.WorkerUtils;
+
+
+import io.datahive.ingestion.utils.HadoopUtils;
+import io.datahive.ingestion.utils.WorkerUtils;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -11,15 +13,15 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Component
-public class DatahiveConsumer {
+public class DatahiveKafkaWorker {
 
-    private final Logger logger = LoggerFactory.getLogger(DatahiveConsumer.class);
+    private final Logger logger = LoggerFactory.getLogger(DatahiveKafkaWorker.class);
 
     public void startConsumerWithTransformations(String inTopicName, String groovyScript, String outTopicName) {
         KafkaProducer<String, Object> producer = WorkerUtils.createProducer();
@@ -28,23 +30,23 @@ public class DatahiveConsumer {
         });
     }
 
-    public void startConsumerAndPushHadoop(String inTopicName, String hdfsFileName) {
-        Optional<FSDataOutputStream> optOutstream = HadoopUtils.openFile(hdfsFileName);
-        if(optOutstream.isEmpty()) {
+    public void startConsumerAndPushHadoop(String inTopicName, String hdfsFileName) throws Exception {
+        ObjectMapper objectmapper = new ObjectMapper();
+        Optional<HadoopUtils.HadoopWriter> optWriter = HadoopUtils.openWriter(hdfsFileName);
+        if(optWriter.isEmpty()) {
             logger.error("Cannot open hdfs file: {}", hdfsFileName);
             return;
         }
-        FSDataOutputStream outstream = optOutstream.get();
-        ObjectMapper objectmapper = new ObjectMapper();
+        HadoopUtils.HadoopWriter  writer = optWriter.get();
         WorkerUtils.startConsumer(inTopicName, (data) -> {
             try {
-                outstream.write(objectmapper.writeValueAsString(data).getBytes());
-                outstream.flush();
+                writer.write(objectmapper.writeValueAsString(data) + "\n");
             }
             catch(Exception e) {
                 e.printStackTrace();
-                logger.error("Error while writing to file: {}, status: {}", hdfsFileName, outstream.getPos());
+                logger.error("Error while writing to file: {}", hdfsFileName);
             }
         });
     }
 }
+

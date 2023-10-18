@@ -62,7 +62,7 @@ def generate_power_grid_data(producer):
             message = json.dumps(station_data)
             producer.produce(KAFKA_TOPIC, key="power_grid_data", value=message)
             producer.flush()
-            print("produced data")
+            print(json.dumps(station_data))
             time.sleep(INTERVAL_SECONDS)
 
 
