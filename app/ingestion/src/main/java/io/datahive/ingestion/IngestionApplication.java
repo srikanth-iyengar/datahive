@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.datahive.ingestion.protoimpl.KafkaServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.protobuf.services.ProtoReflectionService;
 
 @SpringBootApplication
 public class IngestionApplication implements CommandLineRunner {
@@ -30,6 +31,7 @@ public class IngestionApplication implements CommandLineRunner {
         Server server = ServerBuilder
             .forPort(Integer.parseInt(System.getProperty("server.port", "8080")))
             .addService(kafkaServiceImpl)
+            .addService(ProtoReflectionService.newInstance())
             .build();
         server.start();
         logger.info("Started grpc server on port: {}", server.getPort());
