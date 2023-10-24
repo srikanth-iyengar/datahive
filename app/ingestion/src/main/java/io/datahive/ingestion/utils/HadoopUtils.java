@@ -46,7 +46,6 @@ public class HadoopUtils {
             fs.createNewFile(new Path(path));
         }
         catch(Exception e) {
-            e.printStackTrace();
             logger.error("Error while creating file in hdfs: {}", path);
         }
     }
@@ -85,14 +84,17 @@ public class HadoopUtils {
         public void write(String s) throws IOException{
             if(!isRunning) throw new IOException("The writer is not ready for this operation");
             cacheLock.lock();
-            messageCache.add(s);
-            cacheLock.unlock();
+            try {
+                messageCache.add(s);
+            } finally {
+                cacheLock.unlock();
+            }
         }
 
         protected void startWriter() {
             this.isRunning = true;
             this.start();
-            logger.info("Thread status: {}", this.isAlive());
+            logger.info("Started writer for file: {}, status: {}", this.path, this.isAlive());
         }
 
         private void flush() throws IOException {

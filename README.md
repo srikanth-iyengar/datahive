@@ -6,23 +6,31 @@ You define your configuration as by defining resource input and output schema fo
 
 ```yaml
 # sample datahive configuration
+type: stream
 kafka:
-    in-topic-name: <your-topic-name>
-    out-topic-name: <your-topic-name>
-    transform: | 
+    - inTopic: <your-topic-name>
+      outTopic: <your-topic-name>
+      hdfs: false
+      transform: | 
         def transform(record) {
             def jsonObject = record
             // do your transformation logic in a groovy script
             return jsonObject
         }
-    send-data-to:
-        - hadoop:
-            hdfs-file-name: <hdfs-file-name>
-        - elasticsearch:
-            index-name: <elasticsearch-index>
-            # your elasticsearch mapping json value
-            mappings: |
-            {
-                
-            }
+    - inTopic: <your-topic-name>
+      hdfsFileName: <your-hdfs-filename> # the hdfs file path in which you want to save the file
+      hdfs: true
+
+spark:
+    - 
+
+elasticsearch:
+    - 
+
+kibana:
+    dashboard-config:
+```
+
+```yaml
+# sample datahive configuration for batch processing
 ```

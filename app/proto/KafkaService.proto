@@ -4,22 +4,38 @@ option java_multiple_files = true;
 option java_package = "io.datahive.ingestion.proto";
 option java_outer_classname = "KafkaService";
 
+option go_package = "./grpc";
+
 message ConsumerRequestWithTransformation {
     string inTopic = 1;
     string outTopic = 2;
     string groovyScript = 3;
+    string pipelineId = 4;
 }
 
 message ConsumerRequestWithHadoop {
     string inTopic = 1;
     string hdfsFileName = 2;
+    string pipelineId = 3;
 }
 
 message Response {
-    string status = 1;
+    enum WorkerStatus {
+        RUNNING = 0;
+        TERMINATED = 1;
+        NOT_FOUND = 2;
+    }
+    WorkerStatus status = 1;
+    string workerId = 2;
+}
+
+message PingRequest {
+    string workerId = 1;
 }
 
 service IngestionService {
     rpc StartKafkaConsumerWithTransformation(ConsumerRequestWithTransformation) returns (Response);
     rpc StartKafkaConsumerWithHDFSPlugin(ConsumerRequestWithHadoop) returns (Response);
+    rpc StopKafkaConsumerWithTransformation(PingRequest) returns(Response);
+    rpc CheckConsumer(PingRequest) returns(Response);
 }

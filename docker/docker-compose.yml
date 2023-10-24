@@ -49,12 +49,16 @@ services:
        DYNAMIC_CONFIG_ENABLED: "true"
      volumes:
        - ./kui.yaml:/kui.yaml
-   dev-kafkaprocessor:
+   dev-ingestion:
      image: openjdk:17-jdk-bullseye
      command: ["tail", "-f", "/dev/null"]
+     ports:
+        - 8081:8080
      volumes:
        - ../app/ingestion:/opt/datahive/ingestion
        - ./ingestor.sh:/ingestor.sh
+       - ./m2:/root/.m2
+       - ../app/proto:/opt/datahive/proto
    dev-ingestion-arbiter:
      image: deadcoder11u2/ubuntu:fat
      command: ["bash","/entrypoint.sh"]
