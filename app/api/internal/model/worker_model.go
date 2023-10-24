@@ -19,10 +19,10 @@ const (
 )
 
 type Worker struct {
-	Id         string
-	Status     int32
-	Type       WorkerType
-	PipelineId string
+	Id         string     `json:"id"`
+	Status     int32      `json:"status"`
+	Type       WorkerType `json:"type"`
+	PipelineId string     `json:"pipelineId"`
 }
 
 func (w Worker) Save() error {
@@ -63,6 +63,31 @@ func FindAllWorker() ([]Worker, error) {
 	db := newConn()
 	defer db.Close()
 	query := fmt.Sprintf("SELECT * FROM %s;", schema)
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Warn().Msg(err.Error())
+	}
+	workers := []Worker{}
+	defer rows.Close()
+	for rows.Next() {
+		var workerId, workerType, pipelineId string
+		var status int32
+		rows.Scan(&workerId, &status, &workerType, &pipelineId)
+		w := Worker{
+			Id:         workerId,
+			Status:     status,
+			Type:       WorkerType(workerType),
+			PipelineId: pipelineId,
+		}
+		workers = append(workers, w)
+	}
+	return workers, nil
+}
+
+func FindWorkersByPipelineId(pipelineId string) ([]Worker, error) {
+	db := newConn()
+	defer db.Close()
+	query := fmt.Sprintf("SELECT * FROM %s WHERE pipeline_id='%s';", schema, pipelineId)
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Warn().Msg(err.Error())
