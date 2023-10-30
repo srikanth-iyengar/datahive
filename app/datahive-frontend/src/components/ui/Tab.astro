@@ -1,0 +1,12 @@
+---
+import { Icon } from 'astro-icon'
+
+const { icon = 'mdi:rocket', title = 'Title', location = '/' } = Astro.props
+---
+
+<div class="flex flex-row gap-4 mx-4">
+  <Icon name={icon} width="45" />
+  <div class="content flex">
+    <a class="my-auto !no-underline font-semibold text-xl" href={location}>{title}</a>
+  </div>
+</div>
