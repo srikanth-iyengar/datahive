@@ -1,0 +1,64 @@
+---
+import DefaultLayout from '../layouts/DefaultLayout.astro'
+import Hero from '../components/Hero.astro'
+import Feature from '../components/Feature.astro'
+import Counter from '../components/Counter.astro'
+import ContentMedia from '../components/ContentMedia.astro'
+---
+
+<DefaultLayout title="Home">
+  <Hero />
+  <section class="my-64">
+    <div class="container">
+      <h2 class="mb-16 text-6xl">Features</h2>
+      <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+        <Feature icon="mdi:code-braces-box" title="Configuration-Driven">
+          Datahive offers a user-friendly, configuration-driven approach to building data pipelines
+        </Feature>
+        <Feature icon="mdi:database-arrow-right" title="End-to-end Solution">
+          Datahive provides a comprehensive solution for end-to-end data processing. It seamlessly integrates with technologies like Kafka, Hadoop, Apache Spark, Elasticsearch, and Kibana, allowing users to manage data from ingestion to visualization.
+        </Feature>
+        <Feature icon="mdi:apache-kafka" title="Real-Time Streaming">
+          With support of Datahive ingestor, Datahive enables real-time data streaming and processing. Users can easily define the input and output topics, apply data transformations, and monitor the data flow.
+        </Feature>
+        <Feature icon="mdi:folder-arrow-down" title="Batch Processing">
+          Datahive is versatile, accommodating both real-time and batch processing. It allows users to set up batch jobs with features like Hadoop integration for efficient large-scale data processing
+        </Feature>
+        <Feature icon="mdi:robot-happy" title="AutoML (in Progress )">
+          Datahive includes an AutoML feature that suggests machine learning models suitable for your data. This helps users make informed decisions about selecting the right model for their specific use cases, making the data analysis process more efficient
+        </Feature>
+        <Feature icon="mdi:lan" title="Scalability">
+          Datahive is designed to scale seamlessly to handle large volumes of data and growing workloads. It can adapt to changing data processing needs by efficiently distributing tasks and resources.
+        </Feature>
+      </div>
+    </div>
+  </section>
+  <ContentMedia imgSrc="/accessible-components.webp">
+    <h2>Accessible Components</h2>
+    <p class="text-2xl">
+      This theme provides plenty of tried and tested Accessible Astro Components. Some are native to this theme and a
+      lot of others are integrated using a <a href="https://github.com/markteekman/accessible-astro-components"
+        >separate package</a
+      >. They'll get you up and running in building an accessible solution for your visitors.
+    </p>
+  </ContentMedia>
+  <ContentMedia imgSrc="/wcag-compliant.webp" reverseImg={true}>
+    <h2>WCAG 2.1 AA Compliant</h2>
+    <p class="text-2xl">
+      Using semantic HTML, landmarks, skip links, screen reader friendly content, aria-labels, keyboard accessible
+      navigation and components, clear outlines and tab indicators and the right color contrast, you're more certain of
+      reaching WCAG AA compliance.
+    </p>
+  </ContentMedia>
+  <section class="mt-64 mb-32">
+    <div class="container">
+      <h2 class="mb-16 text-6xl">Counters</h2>
+      <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-4">
+        <Counter count="130" title="Stars" sub="On GitHub" />
+        <Counter count="17"  title="Accessible" sub="Components" />
+        <Counter count="500" title="Commits" sub="Merged" />
+        <Counter count="18+" title="Months" sub="Since launch" />
+      </div>
+    </div>
+  </section>
+</DefaultLayout>
