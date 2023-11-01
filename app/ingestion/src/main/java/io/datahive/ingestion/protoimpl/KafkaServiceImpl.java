@@ -37,7 +37,7 @@ public class KafkaServiceImpl extends IngestionServiceGrpc.IngestionServiceImplB
             logger.info("Started a kafka consumer for the topic: {}", request.getInTopic());
         }
         catch(Exception e) {
-            Response response = Response.newBuilder().setStatus(WorkerStatus.TERMINATED).build();
+            Response response = Response.newBuilder().setStatus(WorkerStatus.INTERNAL_ERROR).setMessage(e.getMessage()).build();
             responseObserver.onNext(response);
             logger.warn("Failed to start a kafka consumer for the topic: {}, reason: {}", 
                     request.getInTopic(), e.getMessage());
@@ -57,7 +57,7 @@ public class KafkaServiceImpl extends IngestionServiceGrpc.IngestionServiceImplB
             logger.info("Start kafka consumer for topic: {}, hdfsFile: {}", request.getInTopic(), request.getHdfsFileName());
         }
         catch(Exception e) {
-            Response response = Response.newBuilder().setStatus(WorkerStatus.TERMINATED).build();
+            Response response = Response.newBuilder().setStatus(WorkerStatus.INTERNAL_ERROR).setMessage(e.getMessage()).build();
             responseObserver.onNext(response);
             logger.warn("Failed to start a kafka consumer for the topic: {}, reason: {}", 
                     request.getInTopic(), e.getMessage());

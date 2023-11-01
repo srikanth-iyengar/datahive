@@ -1,36 +1,36 @@
 version: "2"
 services:
-   namenode:
-      image: apache/hadoop:3
-      hostname: namenode
-      command: ["hdfs", "namenode"]
-      ports:
-        - 9870:9870
-      env_file:
-        - ./config
-      environment:
-          ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
-   datanode:
-      image: apache/hadoop:3
-      command: ["hdfs", "datanode"]
-      env_file:
-        - ./config      
-   resourcemanager:
-      image: apache/hadoop:3
-      hostname: resourcemanager
-      command: ["yarn", "resourcemanager"]
-      ports:
-         - 8088:8088
-      env_file:
-        - ./config
-      volumes:
-        - ./test.sh:/opt/test.sh
-   nodemanager:
-      image: apache/hadoop:3
-      command: ["yarn", "nodemanager"]
-      env_file:
-        - ./config
-   kafka:
+  namenode:
+    image: apache/hadoop:3
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    ports:
+      - 9870:9870
+    env_file:
+      - ./config
+    environment:
+      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+  datanode:
+    image: apache/hadoop:3
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./config      
+  resourcemanager:
+    image: apache/hadoop:3
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - 8088:8088
+    env_file:
+      - ./config
+    volumes:
+      - ./test.sh:/opt/test.sh
+  nodemanager:
+    image: apache/hadoop:3
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config
+  kafka:
     image: 'bitnami/kafka:latest'
     environment:
       - KAFKA_CFG_NODE_ID=0
@@ -39,30 +39,67 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-   kafka-monitor:
-     image: provectuslabs/kafka-ui
-     ports:
-       - 8080:8080
-     environment:
-       KAFKA_CLUSTERS_0_NAME: local
-       SPRING_CONFIG_ADDITIONAL-LOCATION: /kui.yaml
-       DYNAMIC_CONFIG_ENABLED: "true"
-     volumes:
-       - ./kui.yaml:/kui.yaml
-   dev-ingestion:
-     image: openjdk:17-jdk-bullseye
-     command: ["tail", "-f", "/dev/null"]
-     ports:
-        - 8081:8080
-     volumes:
-       - ../app/ingestion:/opt/datahive/ingestion
-       - ./ingestor.sh:/ingestor.sh
-       - ./m2:/root/.m2
-       - ../app/proto:/opt/datahive/proto
-   dev-ingestion-arbiter:
-     image: deadcoder11u2/ubuntu:fat
-     command: ["bash","/entrypoint.sh"]
-     volumes:
-       - ../generate.py:/generate.py
-       - ./entrypoint.sh:/entrypoint.sh
-  
+  kafka-monitor:
+    image: provectuslabs/kafka-ui
+    ports:
+      - 8080:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      SPRING_CONFIG_ADDITIONAL-LOCATION: /kui.yaml
+      DYNAMIC_CONFIG_ENABLED: "true"
+    volumes:
+      - ./kui.yaml:/kui.yaml
+  dev-ingestion-arbiter:
+    image: deadcoder11u2/ubuntu:fat
+    command: ["bash","/entrypoint.sh"]
+    volumes:
+      - ../generate.py:/generate.py
+      - ./entrypoint.sh:/entrypoint.sh
+  spark:
+    image: docker.io/deadcoder11u2/spark:datahive
+    build:
+      context: .
+      dockerfile: spark.Dockerfile
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - '8090:8080'
+      - '8091:4040'
+      - '8085:8085'
+    volumes:
+      - ../app/spark:/opt/datahive/spark
+      - ./m2:/root/.m2
+      - ../app/proto:/opt/datahive/proto
+  spark-worker:
+    image: docker.io/bitnami/spark:3.5
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+  minio:
+    image: quay.io/minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: ["server", "/data", "--console-address", ":9001"]
+  dev-ingestion:
+    image: openjdk:17-jdk-bullseye
+    command: "tail -f /dev/null"
+    ports:
+      - 8081:8080
+    volumes:
+      - ../app/ingestion:/opt/datahive/ingestion
+      - ./ingestor.sh:/ingestor.sh
+      - ./m2:/root/.m2
+      - ../app/proto:/opt/datahive/proto

@@ -101,7 +101,6 @@ public class HadoopUtils {
             this.cacheLock.lock();
             List<String> cache = messageCache;
             this.messageCache = new ArrayList<>();
-            this.cacheLock.unlock();
             this.fsLock.lock();
             cache.forEach(msg -> {
                 try {
@@ -113,6 +112,7 @@ public class HadoopUtils {
             this.outstream.close();
             this.outstream = fs.append(new Path(path));
             this.fsLock.unlock();
+            this.cacheLock.unlock();
         }
 
         @Override
@@ -122,12 +122,12 @@ public class HadoopUtils {
                 try {
                     boolean canLockFs = this.fsLock.tryLock(timeout, TimeUnit.MICROSECONDS);
                     if(canLockFs) {
-                        logger.info("Flushing out the junk: {}", canLockFs);
                         flush();
                     }
                     else {
-                        timeout += timeout / 50;
+                        
                     }
+                    timeout += timeout / 50;
                 }
                 catch (Exception e) {
                     logger.error("Error while trying to flush the output: {}", e.getMessage());

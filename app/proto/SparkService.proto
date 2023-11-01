@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.datahive.spark.proto";
+option java_outer_classname = "SparkService";
+
+option go_package = "./grpc";
+
+message SparkJobRequest {
+    string JobName = 1;
+    string DriverMemory = 2;
+    string ExecutorMemory = 3;
+    string ResourceLocation = 4;
+    string MainClass = 5;
+}
+
+message JobInfo {
+    enum Status {
+        RUNNING = 0;
+        STOPPED = 1;
+        TERMINATED = 2;
+        NOT_FOUND = 3;
+        SCHEDULING_FAILURE = 4;
+        RESOURCE_FAILURE = 5;
+        INTERNAL_FAILRUE = 6;
+    }
+
+    string workerId = 1;
+    Status jobStatus = 2;
+    string message = 3;
+}
+
+message PingJob {
+    string workerId = 1;
+}
+
+service AnalysisService {
+    rpc StartSparkJob(SparkJobRequest) returns (JobInfo);
+    rpc StopSparkJob(PingJob) returns (JobInfo);
+    rpc CheckJob(PingJob) returns (JobInfo);
+}

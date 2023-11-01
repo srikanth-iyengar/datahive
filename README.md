@@ -22,7 +22,15 @@ kafka:
       hdfs: true
 
 spark:
-    - 
+    - app-resource: <path-for-your-spark-build-file>
+      driver.memory: 1g
+      executor.memory: 2g
+    - app-resource: <path-for-your-second-spark-build-file>
+      driver-memory: 1g
+      executor-memory: 2g
+      res-location: <path-for-the-spark-job-code>
+      main-class: <main-class-of-your-spark-job>
+      job-name: <name-of-your-job>
 
 elasticsearch:
     - 

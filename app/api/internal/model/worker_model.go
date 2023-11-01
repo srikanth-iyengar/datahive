@@ -20,7 +20,7 @@ const (
 
 type Worker struct {
 	Id         string     `json:"id"`
-	Status     int32      `json:"status"`
+	Status     string     `json:"status"`
 	Type       WorkerType `json:"type"`
 	PipelineId string     `json:"pipelineId"`
 }
@@ -28,22 +28,19 @@ type Worker struct {
 func (w Worker) Save() error {
 	db := newConn()
 	defer db.Close()
-	query := fmt.Sprintf("INSERT INTO %s (id, status, type, pipeline_id) values('%s', %d, '%s', '%s');", schema, w.Id, w.Status, w.Type, w.PipelineId)
-	err := db.QueryRow(query).Scan()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
+	query := fmt.Sprintf("INSERT INTO %s (id, status, type, pipeline_id) values('%s', '%s', '%s', '%s');", schema, w.Id, w.Status, w.Type, w.PipelineId)
+	db.QueryRow(query).Scan()
 	return nil
 }
 
 func (w Worker) Update() error {
 	db := newConn()
 	defer db.Close()
-	query := fmt.Sprintf("UPDATE %s SET status=%d, type='%s'  WHERE id='%s' and pipeline_id='%s';", schema, w.Status, w.Type, w.Id, w.PipelineId)
-	err := db.QueryRow(query).Scan()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
+    query := fmt.Sprintf("UPDATE %s SET status='%s', type='%s'  WHERE id='%s' and pipeline_id='%s';", schema, w.Status, w.Type, w.Id, w.PipelineId)
+    err := db.QueryRow(query).Scan()
+    if err != nil {
+        log.Error().Msg(err.Error())
+    }
 	return nil
 }
 
@@ -52,26 +49,19 @@ func FindWorker(id string) (Worker, error) {
 	defer db.Close()
 	var w Worker
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id='%s';", schema, id)
-	err := db.QueryRow(query).Scan(w.Id, w.Status, w.Type, w.PipelineId)
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
+	db.QueryRow(query).Scan(w.Id, w.Status, w.Type, w.PipelineId)
 	return w, nil
 }
 
-func FindAllWorker() ([]Worker, error) {
+func FindAllWorker(workerType string) ([]Worker, error) {
 	db := newConn()
 	defer db.Close()
-	query := fmt.Sprintf("SELECT * FROM %s;", schema)
-	rows, err := db.Query(query)
-	if err != nil {
-		log.Warn().Msg(err.Error())
-	}
+	query := fmt.Sprintf("SELECT * FROM %s WHERE type='%s';", schema, workerType)
+	rows, _ := db.Query(query)
 	workers := []Worker{}
 	defer rows.Close()
 	for rows.Next() {
-		var workerId, workerType, pipelineId string
-		var status int32
+		var workerId, workerType, pipelineId, status string
 		rows.Scan(&workerId, &status, &workerType, &pipelineId)
 		w := Worker{
 			Id:         workerId,
@@ -96,7 +86,7 @@ func FindWorkersByPipelineId(pipelineId string) ([]Worker, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var workerId, workerType, pipelineId string
-		var status int32
+		var status string
 		rows.Scan(&workerId, &status, &workerType, &pipelineId)
 		w := Worker{
 			Id:         workerId,
@@ -112,11 +102,8 @@ func FindWorkersByPipelineId(pipelineId string) ([]Worker, error) {
 func initWorkerSchema() bool {
 	db := newConn()
 	defer db.Close()
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id varchar, status int, type varchar, pipeline_id varchar, PRIMARY KEY (id),CONSTRAINT fk_pipeline FOREIGN KEY(pipeline_id) REFERENCES %s(id));", schema, PipelineDb)
-	err := db.QueryRow(query).Scan()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
-	log.Info().Msg("Init schema for worker successfull")
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id varchar, status varchar, type varchar, pipeline_id varchar, PRIMARY KEY (id),CONSTRAINT fk_pipeline FOREIGN KEY(pipeline_id) REFERENCES %s(id));", schema, PipelineDb)
+	db.QueryRow(query).Scan()
+	log.Info().Msg("Init schema for worker ✅")
 	return true
 }
