@@ -2,34 +2,21 @@ package utils
 
 import (
 	"context"
-	"os"
 	"time"
 
 	pb "datahive.io/api/pkg/grpc"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
-func getNewGrpcClient() (*grpc.ClientConn, error) {
-	ingestion_addr := os.Getenv("INGESTION_ADDR")
-	conn, err := grpc.Dial(ingestion_addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Error().Msg(err.Error())
-		return nil, err
-	}
-	return conn, nil
-}
-
 func StartKafkaWithTransform(inTopic string, groovyScript string, outTopic string, pipelineId string) *pb.Response {
-	conn, err := getNewGrpcClient()
+	conn, err := getNewGrpcClient(string(IngestionAddr))
 	defer conn.Close()
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return &pb.Response{}
 	}
 	c := pb.NewIngestionServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
 	defer cancel()
 	resp, err := c.StartKafkaConsumerWithTransformation(ctx, &pb.ConsumerRequestWithTransformation{
 		InTopic:      inTopic,
@@ -47,14 +34,14 @@ func StartKafkaWithTransform(inTopic string, groovyScript string, outTopic strin
 }
 
 func StartKafkaWithHdfsPlugin(inTopic string, hdfsFileName string, pipelineId string) *pb.Response {
-	conn, err := getNewGrpcClient()
+	conn, err := getNewGrpcClient(string(IngestionAddr))
 	defer conn.Close()
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return &pb.Response{}
 	}
 	c := pb.NewIngestionServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	resp, err := c.StartKafkaConsumerWithHDFSPlugin(ctx, &pb.ConsumerRequestWithHadoop{
 		InTopic:      inTopic,
@@ -68,7 +55,7 @@ func StartKafkaWithHdfsPlugin(inTopic string, hdfsFileName string, pipelineId st
 }
 
 func CheckConsumer(worker_id string) *pb.Response {
-	conn, err := getNewGrpcClient()
+	conn, err := getNewGrpcClient(string(IngestionAddr))
 	defer conn.Close()
 	if err != nil {
 		log.Error().Msg(err.Error())
@@ -84,7 +71,7 @@ func CheckConsumer(worker_id string) *pb.Response {
 }
 
 func StopConsumer(worker_id string) *pb.Response {
-	conn, err := getNewGrpcClient()
+	conn, err := getNewGrpcClient(string(IngestionAddr))
 	defer conn.Close()
 	if err != nil {
 		log.Error().Msg(err.Error())
