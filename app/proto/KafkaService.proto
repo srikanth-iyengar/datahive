@@ -24,9 +24,11 @@ message Response {
         RUNNING = 0;
         TERMINATED = 1;
         NOT_FOUND = 2;
+        INTERNAL_ERROR = 3;
     }
     WorkerStatus status = 1;
     string workerId = 2;
+    string message = 3;
 }
 
 message PingRequest {
