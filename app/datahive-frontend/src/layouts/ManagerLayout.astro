@@ -1,5 +1,4 @@
 ---
-// import Sidebar from "../components/ui/Sidebar"
 import '@astrojs/tailwind/base.css'
 import '../assets/scss/globals.scss'
 import Sidebar from '../components/ui/Sidebar.astro';
@@ -11,13 +10,10 @@ import { Breadcrumbs } from "astro-breadcrumbs";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
-    <!-- favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
   </head>
     <body>
-        <div class="flex gap-10">
+        <div class="flex gap-16 flex-row">
             <Sidebar />
             <div class="flex flex-col my-10">
                 <Breadcrumbs>
@@ -30,8 +26,8 @@ import { Breadcrumbs } from "astro-breadcrumbs";
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
                       stroke-linecap="round"
+                      stroke-width="2"
                       stroke-linejoin="round"
                       ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">
                       </path><polyline points="9 22 9 12 15 12 15 22"></polyline>

@@ -1,5 +1,4 @@
 ---
-import Navigation from '../Navigation.astro'
 import { DarkMode, SkipLinks } from 'accessible-astro-components'
 import { Image } from 'astro:assets';
 import logo from "../../assets/img/logo.svg"
@@ -8,19 +7,19 @@ import Tab from "./Tab.astro"
 
 <header>
   <SkipLinks />
-  <div class="flex flex-row gap-2">
+  <div class="flex flex-row gap-1">
     <a href="/" class="flex items-center gap-2 my-10 mx-4 !no-underline">
       <Image src={logo} alt="Your Logo" width="47" height="37" />
       <span class="font-bold text-3xl">Datahive</span>
     </a>
-    <DarkMode />
   </div>
   <div class="main-navigation flex flex-col gap-4 my-2">
     <Tab icon="mdi:sitemap" title="Workflow" location="workflow/" />
-    <Tab icon="mdi:eye-circle" title="Monitor" />
-    <Tab icon="mdi:alert-circle" title="Alerts" />
-    <Tab icon="mdi:head-snowflake" title="AutoML" />
-    <Tab icon="mdi:cog" title="Settings" />
+    <Tab icon="mdi:eye-circle" title="Monitor" location="monitor/" />
+    <Tab icon="mdi:alert-circle" title="Alerts" location="alerts/" />
+    <Tab icon="mdi:head-snowflake" title="AutoML" location="automl/" />
+    <Tab icon="mdi:cog" title="Settings" location="settings/" />
+    <DarkMode/>
   </div>
 </header>
 
