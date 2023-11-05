@@ -66,10 +66,7 @@ func FindAllStack() []Stack {
 func InitStackSchema() {
 	db := newConn()
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id int, addr varchar, earliest_success int, is_up boolean, name varchar, PRIMARY KEY (id) );", StackDb)
-	err := db.QueryRow(query).Scan()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
+	db.QueryRow(query).Scan()
 	db.Close()
 	stacks := []map[string]string{
 		{

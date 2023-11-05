@@ -47,7 +47,7 @@ public class SparkUtils {
                 .setSparkHome("/opt/spark")
                 .setAppResource(resourceLocation)
                 .setAppName(jobName + "-" + workerId)
-                .setDeployMode("cluster")
+                .setDeployMode("client")
                 .launch();
             jobs.put(workerId, spark);
             return JobInfo.newBuilder()
