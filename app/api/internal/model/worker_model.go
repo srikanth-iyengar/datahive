@@ -36,11 +36,11 @@ func (w Worker) Save() error {
 func (w Worker) Update() error {
 	db := newConn()
 	defer db.Close()
-    query := fmt.Sprintf("UPDATE %s SET status='%s', type='%s'  WHERE id='%s' and pipeline_id='%s';", schema, w.Status, w.Type, w.Id, w.PipelineId)
-    err := db.QueryRow(query).Scan()
-    if err != nil {
-        log.Error().Msg(err.Error())
-    }
+	query := fmt.Sprintf("UPDATE %s SET status='%s', type='%s'  WHERE id='%s' and pipeline_id='%s';", schema, w.Status, w.Type, w.Id, w.PipelineId)
+	err := db.QueryRow(query).Scan()
+	if err != nil {
+		log.Error().Msg(err.Error())
+	}
 	return nil
 }
 
@@ -103,6 +103,8 @@ func initWorkerSchema() bool {
 	db := newConn()
 	defer db.Close()
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id varchar, status varchar, type varchar, pipeline_id varchar, PRIMARY KEY (id),CONSTRAINT fk_pipeline FOREIGN KEY(pipeline_id) REFERENCES %s(id));", schema, PipelineDb)
+	db.QueryRow(query).Scan()
+	query = fmt.Sprintf("ALTER TABLE %s ALTER COLUMN id SET NOT NULL;", PipelineDb)
 	db.QueryRow(query).Scan()
 	log.Info().Msg("Init schema for worker ✅")
 	return true
