@@ -42,7 +42,7 @@ func UpdateWorkers(config string, id string) []map[string]string {
 			w := map[string]string{
 				"Id":         resp.GetWorkerId(),
 				"Status":     resp.GetStatus().String(),
-				"Type":       "ConsumerWithHdfs",
+				"Type":       "KafkaConsumerWithHdfs",
 				"PipelineId": id,
 			}
 			workers = append(workers, w)
@@ -55,7 +55,7 @@ func UpdateWorkers(config string, id string) []map[string]string {
 			w := map[string]string{
 				"Id":         resp.GetWorkerId(),
 				"Status":     resp.GetStatus().String(),
-				"Type":       "Consumer",
+				"Type":       "KafkaConsumer",
 				"PipelineId": id,
 			}
 			workers = append(workers, w)

@@ -37,10 +37,7 @@ func (w Worker) Update() error {
 	db := newConn()
 	defer db.Close()
 	query := fmt.Sprintf("UPDATE %s SET status='%s', type='%s'  WHERE id='%s' and pipeline_id='%s';", schema, w.Status, w.Type, w.Id, w.PipelineId)
-	err := db.QueryRow(query).Scan()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
+    db.QueryRow(query).Scan()
 	return nil
 }
 

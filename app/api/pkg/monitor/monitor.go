@@ -6,7 +6,6 @@ import (
 
 	"datahive.io/api/internal/model"
 	"datahive.io/api/pkg/utils"
-	"github.com/rs/zerolog/log"
 )
 
 func MonitorAll() {
@@ -63,7 +62,6 @@ func statusCheckSparkJobs() {
 		}
 		resp := utils.CheckSparkjob(worker.Id)
 		worker.Status = resp.GetJobStatus().String()
-		log.Info().Msgf("Worker Update status: %s, id, %s", worker.Id, worker.Status)
 		worker.Update()
 	}
 }
