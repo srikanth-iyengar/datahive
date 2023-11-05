@@ -13,8 +13,6 @@ type Pipeline struct {
 	Configuration string `json:"configuration"`
 }
 
-type TableName string
-
 const (
 	PipelineDb TableName = "datahive_pipeline"
 )
@@ -77,6 +75,8 @@ func initPipelineSchema() bool {
 	defer db.Close()
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id varchar, name varchar, configuration varchar, PRIMARY KEY(id));", PipelineDb)
 	db.QueryRow(query).Scan()
-	log.Info().Msg("Successfully created model for Pipeline")
+	query = fmt.Sprintf("ALTER TABLE %s ALTER COLUMN id SET NOT NULL;", PipelineDb)
+	db.QueryRow(query).Scan()
+	log.Info().Msg("Init schema for pipeline ✅")
 	return true
 }
