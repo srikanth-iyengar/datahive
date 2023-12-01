@@ -1,0 +1,45 @@
+type: stream
+kafka:
+    - inTopic: ecommerce-data.in
+      outTopic: ecommerce-data.out
+      hdfs: false
+      transform: | 
+        def transform(record) {
+            def jsonObject = record
+            // do your transformation logic in a groovy script
+            return jsonObject
+        }
+        this
+    - inTopic: ecommerce-data.out
+      outTopic: ecommerce-data.err
+      hdfs: false
+      transform: | 
+        def transform(record) {
+            def jsonObject = record
+            // do your transformation logic in a groovy script
+            return jsonObject
+        }
+        this
+    - inTopic: ecommerce-data.err
+      hdfsFileName: /data/ecommerce-data.json
+      hdfs: true
+
+spark:
+    - app-resource: http://minio:9000/test-bucket/spark.jar
+      driver-memory: 1g
+      executor-memory: 2g
+      res-location: http://minio:9000/test-bucket/spark.jar
+      main-class: Main.class
+      job-name: E commerce data
+    - app-resource: http://minio:9000/test-bucket/spark.jar
+      driver-memory: 1g
+      executor-memory: 2g
+      res-location: http://minio:9000/test-bucket/spark.jar
+      main-class: Main.class
+      job-name: E Commerce transforms
+    - app-resource: http://minio:9000/test-bucket/spark.jar
+      driver-memory: 1g
+      executor-memory: 2g
+      res-location: http://minio:9000/test-bucket/spark.jar
+      main-class: Main.class
+      job-name: Sink Elasticsearch

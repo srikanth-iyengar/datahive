@@ -1,0 +1,9 @@
+FROM docker.io/spark
+ENV SPARK_MODE=master
+ENV SPARK_RPC_AUTHENTICATION_ENABLED=no
+ENV SPARK_RPC_ENCRYPTION_ENABLED=no
+ENV SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+ENV SPARK_SSL_ENABLED=no
+ENV SPARK_USER=spark
+COPY ./target/spark-0.0.1-SNAPSHOT.jar /opt/datahive/spark.jar
+ENTRYPOINT ["java", "-jar", "/opt/datahive/spark.jar"]

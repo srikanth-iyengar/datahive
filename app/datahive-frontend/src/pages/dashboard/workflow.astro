@@ -1,0 +1,8 @@
+---
+import ManagerLayout from "../../layouts/ManagerLayout.astro";
+import Table from "../../components/ui/Table.jsx";
+---
+
+<ManagerLayout>
+    <Table header={["ID", "Name", "Owner", "Config", "Worker Stats", "Actions"]} client:only="react" />
+</ManagerLayout>

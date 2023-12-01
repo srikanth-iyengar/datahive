@@ -1,11 +1,15 @@
 .PHONY: up down stop fmt
 
-RSRC?="resourcemanager nodemanager datanode namenode kafka dev-ingestion spark minio"
+SHELL=/bin/bash
+
+RSRC?="resourcemanager nodemanager datanode namenode kafka dev-ingestion spark minio elastic kibana"
 OPTS?=
 
 up:
 	@ echo ${RSRC}
-	@cd docker; docker-compose up ${OPTS} -d `echo ${RSRC}`
+	@ cd docker; docker-compose up ${OPTS} -d `echo ${RSRC}`
+	@ sleep 6
+	@ docker exec -i -t docker_datanode_1 hadoop fs -chmod 777 /
 
 down:
 	@cd docker; docker-compose down

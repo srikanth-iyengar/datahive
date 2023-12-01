@@ -1,0 +1,41 @@
+type: stream
+kafka:
+    - inTopic: ecommerce-data.in
+      outTopic: ecommerce-data.out
+      hdfs: false
+      transform: | 
+        import groovy.json.JsonBuilder
+        def transform(record) {
+          def header = ["Order_Date", "Time", "Aging", "Customer_Id", "Gender", "Device_Type", "Customer_Login_type", "Product_Category", "Product", "Sales", "Quantity", "Discount", "Profit", "Shipping_Cost", "Order_Priority", "Payment_method"]
+          def values = record.split(',')
+          def jsonObject = [:]
+          for (int i = 0; i < header.size(); i++) {
+            jsonObject[header[i]] = values[i].trim()
+          }
+          return new JsonBuilder(jsonObject).toPrettyString()
+        }
+        this
+    - inTopic: ecommerce-data.in
+      outTopic: ecommerce-data.out
+      hdfs: false
+      transform: | 
+        import groovy.json.JsonBuilder
+        def transform(record) {
+          def header = ["Order_Date", "Time", "Aging", "Customer_Id", "Gender", "Device_Type", "Customer_Login_type", "Product_Category", "Product", "Sales", "Quantity", "Discount", "Profit", "Shipping_Cost", "Order_Priority", "Payment_method"]
+          def values = record.split(',')
+          def jsonObject = [:]
+          for (int i = 0; i < header.size(); i++) {
+            jsonObject[header[i]] = values[i].trim()
+          }
+          return new JsonBuilder(jsonObject).toPrettyString()
+        }
+        this
+    - inTopic: ecommerce-data.out
+      hdfsFileName: /data/ecommerce-data.json
+      hdfs: true
+    - inTopic: ecommerce-data.out
+      hdfsFileName: /data/ecommerce-data.json
+      hdfs: true
+    - inTopic: ecommerce-data.out
+      hdfsFileName: /data/ecommerce-data.json
+      hdfs: true

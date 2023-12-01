@@ -5,7 +5,7 @@
   "author": "Mark Teekman",
   "homepage": "https://accessible-astro.netlify.app/",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
@@ -35,6 +35,7 @@
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
     "astro-breadcrumbs": "^1.8.0",
+    "axios": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reactflow": "^11.9.4"

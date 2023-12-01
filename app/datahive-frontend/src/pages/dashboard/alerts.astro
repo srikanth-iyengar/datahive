@@ -1,0 +1,30 @@
+---
+import { Notification } from "accessible-astro-components";
+import ManagerLayout from "../../layouts/ManagerLayout.astro"
+import Icon from "astro-icon";
+---
+<ManagerLayout>
+    <div class="my-10">
+        <h5 class="font-bold text-3xl">Alerts</h5>
+        <div class="flex flex-col gap-4">
+          <Notification type="error">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+          <Notification type="error">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+          <Notification type="warning">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+          <Notification type="error">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+          <Notification type="warning">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+          <Notification type="error">
+            <Icon pack="ion" name="notifications-outline" /><p><strong>Message:</strong> The system has detected that one or more nodes are currently unreachable or down. This may impact the availability and reliability of your services. Please investigate and resolve the issue to ensure uninterrupted operation</p>
+          </Notification>
+        </div>
+    </div>
+</ManagerLayout>

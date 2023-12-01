@@ -39,7 +39,7 @@ import { Icon } from 'astro-icon'
 
     if (emailInput.value === 'admin@astro.demo' && passwordInput.value === 'Astronaut570') {
       localStorage.setItem('isLoggedIn', 'true')
-      window.location.href = '/'
+      window.location.href = '/dashboard/workflow'
     } else {
       notification.style.display = 'flex'
     }

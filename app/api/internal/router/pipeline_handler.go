@@ -54,6 +54,9 @@ func updatePipeline(req model.Pipeline) (int, []byte) {
 }
 
 func getPipeline(id string) (int, []byte) {
+    if id == "all" {
+        return getAllPipeline()
+    }
 	pipeline := model.FindPipeline(id)
 	resp, err := marshallBody(pipeline)
 	if err != nil {
@@ -61,6 +64,16 @@ func getPipeline(id string) (int, []byte) {
 		return 500, []byte{}
 	}
 	return 200, resp
+}
+
+func getAllPipeline() (int, []byte) {
+    pipelines := model.FindAllPipeline()
+    resp, err := json.Marshal(pipelines)
+    if err != nil {
+        log.Error().Msg(err.Error())
+        return 500, []byte{}
+    }
+    return 200, resp
 }
 
 func savePipeline(req model.Pipeline) (int, []byte) {

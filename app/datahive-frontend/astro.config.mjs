@@ -10,5 +10,6 @@ export default defineConfig({
   compressHTML: true,
   integrations: [mdx(), tailwind({
     applyBaseStyles: false
-  }), compress(), react()]
+  }), compress(), react()],
+  output: "server"
 });
