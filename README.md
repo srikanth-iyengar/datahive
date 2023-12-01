@@ -14,7 +14,7 @@
 
 Define your data pipeline effortlessly using a simple YAML configuration file. Specify input and output schemas for each service, and let Datahive handle the rest. Below is a sample configuration for stream processing:
 
-```sql
+```yaml
 type: stream
 kafka:
     - inTopic: <your-topic-name>
@@ -46,7 +46,7 @@ elasticsearch:
 
 kibana:
     dashboard-config:
-
+```
 
 
 ## Getting Started
