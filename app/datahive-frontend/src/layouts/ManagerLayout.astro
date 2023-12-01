@@ -1,0 +1,109 @@
+---
+import '@astrojs/tailwind/base.css'
+import '../assets/scss/globals.scss'
+import Sidebar from '../components/ui/Sidebar.astro';
+import { Breadcrumbs } from "astro-breadcrumbs";
+---
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+    <body>
+        <div class="flex gap-16 flex-row">
+            <Sidebar />
+            <div class="flex flex-col my-10">
+                <Breadcrumbs>
+                    <svg
+                      slot="index"
+                      aria-label="Home Page"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                      ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">
+                      </path><polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </Breadcrumbs>
+                <div id="main-content">
+                    <slot />
+                </div>
+            </div>
+        </div>
+    </body>
+    <style lang="scss">
+     @use "astro-breadcrumbs/breadcrumbs.scss";
+      :root {
+        --radius-small: 3px;
+        --radius-large: 6px;
+        --gap-default: 2rem;
+        --font-measure: 70ch;
+        --font-family-default: 'Open Sans', sans-serif;
+        --font-family-special: 'Open Sans', sans-serif;
+        // light theme
+        --font-color: var(--neutral-900);
+        --action-color: var(--primary-300);
+        --action-color-state: var(--primary-500);
+        --background: var(--neutral-100);
+        --primary-background: var(--primary-100);
+        --neutral-background: var(--neutral-200);
+      }
+
+      // dark color scheme overrides
+      .darkmode {
+        --font-color: var(--neutral-100);
+        --action-color: var(--secondary-100);
+        --action-color-state: var(--secondary-500);
+        --background: var(--dark-100);
+        --primary-background: var(--primary-500);
+        --neutral-background: var(--neutral-900);
+      }
+
+      // sticky footer on low content pages
+      html,
+      body {
+        height: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        color: var(--font-color);
+        background-color: var(--background);
+
+        main {
+          flex: 1 0 auto;
+        }
+
+        footer {
+          flex-shrink: 0;
+        }
+      }
+
+      pre {
+        padding: 1rem;
+        border-radius: 0.35rem;
+        border: 2px solid var(--action-color);
+      }
+
+      body .pagination a {
+        &:hover,
+        &:focus-visible {
+          background-color: var(--action-color-state);
+
+          svg path {
+            stroke: white;
+          }
+        }
+      }
+    </style>
+</html>

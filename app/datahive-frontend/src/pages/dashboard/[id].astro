@@ -1,0 +1,8 @@
+---
+import ManagerLayout from "../../layouts/ManagerLayout.astro";
+import Workflow from "../../components/ui/Workflow";
+const {id} = Astro.params;
+---
+<ManagerLayout>
+    <Workflow id={id} client:only="react"/>
+</ManagerLayout>

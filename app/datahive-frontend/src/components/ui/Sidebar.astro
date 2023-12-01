@@ -1,0 +1,50 @@
+---
+import { DarkMode, SkipLinks } from 'accessible-astro-components'
+import { Image } from 'astro:assets';
+import logo from "../../assets/img/logo.svg"
+import Tab from "./Tab.astro"
+---
+
+<header>
+  <SkipLinks />
+  <div class="flex flex-row gap-1">
+    <a href="/" class="flex items-center gap-2 my-10 mx-4 !no-underline">
+      <Image src={logo} alt="Your Logo" width="47" height="37" />
+      <span class="font-bold text-3xl">Datahive</span>
+    </a>
+  </div>
+  <div class="main-navigation flex flex-col gap-4 my-2">
+    <Tab icon="mdi:sitemap" title="Workflow" location="/dashboard/workflow/" />
+    <Tab icon="mdi:eye-circle" title="Monitor" location="/dashboard/monitor/" />
+    <Tab icon="mdi:alert-circle" title="Alerts" location="/dashboard/alerts/" />
+    <Tab icon="mdi:head-snowflake" title="AutoML" location="/dashboard/automl/" />
+    <Tab icon="mdi:cog" title="Settings" location="settings/" />
+    <DarkMode/>
+  </div>
+</header>
+
+<style lang="scss" is:global>
+  @use '../../assets/scss/base/outline' as *;
+
+  header {
+    .type-icon a {
+      display: block;
+
+      [astro-icon] {
+        margin-top: -4px;
+        width: 30px;
+
+        path {
+          fill: var(--action-color);
+          transition: fill 0.2s ease-in-out;
+        }
+      }
+
+      &:hover {
+        [astro-icon] path {
+          fill: var(--action-color-state);
+        }
+      }
+    }
+  }
+</style>

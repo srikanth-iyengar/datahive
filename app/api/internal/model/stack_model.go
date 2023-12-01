@@ -29,14 +29,14 @@ func (st Stack) Save() {
 	db := newConn()
 	defer db.Close()
 	query := fmt.Sprintf(StackInsert, StackDb, st.Id, st.Addr, st.EarliestSuccess, st.Name)
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 }
 
 func (st Stack) Update() {
 	db := newConn()
 	defer db.Close()
-	query := fmt.Sprintf(StackUpdate, StackDb, st.Addr, st.EarliestSuccess, st.IsUp, st.Id)
-	db.QueryRow(query).Scan()
+    query := fmt.Sprintf(StackUpdate, StackDb, st.Addr, st.EarliestSuccess, st.IsUp, st.Id)
+    db.Exec(query)
 }
 
 func FindStackById(id int32) Stack {
@@ -66,7 +66,7 @@ func FindAllStack() []Stack {
 func InitStackSchema() {
 	db := newConn()
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id int, addr varchar, earliest_success int, is_up boolean, name varchar, PRIMARY KEY (id) );", StackDb)
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 	db.Close()
 	stacks := []map[string]string{
 		{

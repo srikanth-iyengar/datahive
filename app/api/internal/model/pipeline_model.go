@@ -30,11 +30,25 @@ func FindPipeline(id string) Pipeline {
 	return pipeline
 }
 
+func FindAllPipeline() []Pipeline {
+    db := newConn()
+    defer db.Close()
+    query := fmt.Sprintf("SELECT * FROM %s;", PipelineDb)
+    resp := []Pipeline{}
+    rows, _ := db.Query(query)
+    for rows.Next() {
+        var pipeline Pipeline
+        rows.Scan(&pipeline.Id, &pipeline.Name, &pipeline.Configuration)
+        resp = append(resp, pipeline)
+    }
+    return resp
+}
+
 func (p Pipeline) Save() (bool, string) {
 	db := newConn()
 	defer db.Close()
 	query := p.toSql()
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 	return true, "Saved pipeline successfully : {}"
 }
 
@@ -43,7 +57,7 @@ func (p Pipeline) Delete() (bool, string) {
 	defer db.Close()
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = '%s'", PipelineDb, p.Id)
 
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 
 	return true, fmt.Sprintf("Deleted the pipeline with id: %s", p.Id)
 }
@@ -53,7 +67,7 @@ func (p Pipeline) Update(newPipeline Pipeline) (bool, string) {
 	defer db.Close()
 	query := fmt.Sprintf("UPDATE %s SET name='%s', configuration='%s' WHERE id='%s';", PipelineDb, newPipeline.Name, newPipeline.Configuration, p.Id)
 
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 
 	go func() {
 		workers := utils.UpdateWorkers(newPipeline.Configuration, newPipeline.Id)
@@ -74,9 +88,9 @@ func initPipelineSchema() bool {
 	db := newConn()
 	defer db.Close()
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (id varchar, name varchar, configuration varchar, PRIMARY KEY(id));", PipelineDb)
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 	query = fmt.Sprintf("ALTER TABLE %s ALTER COLUMN id SET NOT NULL;", PipelineDb)
-	db.QueryRow(query).Scan()
+	db.Exec(query)
 	log.Info().Msg("Init schema for pipeline ✅")
 	return true
 }

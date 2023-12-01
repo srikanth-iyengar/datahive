@@ -9,7 +9,7 @@ import (
 )
 
 func MonitorAll() {
-	statusCheckTicker := time.NewTicker(10 * time.Second)
+	statusCheckTicker := time.NewTicker(5 * time.Second)
 	go func() {
 		for {
 			select {
