@@ -53,7 +53,7 @@ services:
     image: deadcoder11u2/ubuntu:fat
     command: ["bash","/entrypoint.sh"]
     volumes:
-      - ../hack/generate.py:/stream.py
+      - ../examples/generate.py:/stream.py
       - ../examples/stream.csv:/stream.csv
       - ./entrypoint.sh:/entrypoint.sh
   spark:
